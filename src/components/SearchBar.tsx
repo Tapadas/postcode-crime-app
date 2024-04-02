@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export const validatePostcodes = (postcodes: string) => {
   return postcodes
-    .replace(/\s/g, "")
+    .replace(/(\s|%20)/g, "")
     .split(",")
     .filter(isValidPostCode)
     .map((postcode) => postcode.toUpperCase());
