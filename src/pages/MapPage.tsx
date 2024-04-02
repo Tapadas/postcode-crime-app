@@ -1,15 +1,18 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { usePostcodeData } from "../hooks/usePostcodeData";
 import { useCrimeData } from "../hooks/useCrimeData";
 import { useEffect, useMemo } from "react";
 import { groupBy } from "lodash";
 import { usePostCodeContext } from "../context/PostcodeHistoryContext";
+import { validatePostcodes } from "../components/SearchBar";
 
 export const MapPage = () => {
   const { postcodes } = useParams();
-  const { addPostcodesToHistory } = usePostCodeContext();
-  const { postCodeData, postcodeLoading } = usePostcodeData(postcodes || "");
+  const navigate = useNavigate();
+  const validPostcodes = validatePostcodes(postcodes || "");
+  const { postCodeData, postcodeLoading } = usePostcodeData(validPostcodes);
   const { crimeData, crimeDataLoading } = useCrimeData(postCodeData);
+  const { addPostcodesToHistory } = usePostCodeContext();
 
   useEffect(() => {
     if (!postcodeLoading) {
@@ -28,6 +31,9 @@ export const MapPage = () => {
 
   return (
     <div>
+      <button onClick={() => navigate(`/crime-data/${validPostcodes}`)}>
+        Crime data view
+      </button>
       <div>
         {postCodeData &&
           postCodeData.map((result) => (

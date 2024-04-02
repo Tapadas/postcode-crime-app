@@ -1,6 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
 import axios from "axios";
-import { validatePostcodes } from "../components/SearchBar";
 
 export interface PostCodesWithLatLong {
   postcode: string;
@@ -16,11 +15,9 @@ const fetchPostcodeData = (postcode: string) => {
     });
 };
 
-export const usePostcodeData = (postcodes: string) => {
-  const validPostcodes = validatePostcodes(postcodes);
-
+export const usePostcodeData = (postcodes: string[]) => {
   const result = useQueries({
-    queries: validPostcodes.map((postcode) => ({
+    queries: postcodes.map((postcode) => ({
       queryKey: ["postcode", postcode],
       queryFn: () => fetchPostcodeData(postcode),
       refetchOnMount: false,
